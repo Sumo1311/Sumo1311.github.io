@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click Counter</title>
+</head>
+<body>
+    <h1>Click Counter</h1>
+    <p>Click the button to increment the counter:</p>
+    <button id="incrementButton">Click me!</button>
+    <h2>Current Count: <span id="countDisplay">0</span></h2>
+
+    <script>
+        // 当页面加载时，先获取当前点击次数
+        window.onload = async () => {
+            try {
+                const response = await fetch('/get-click-count');
+                const data = await response.json();
+                document.getElementById('countDisplay').textContent = data.count;
+            } catch (error) {
+                console.error('Error fetching click count:', error);
+            }
+        };
+
+        // 点击按钮时触发
+        document.getElementById('incrementButton').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/increment-click-count', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                document.getElementById('countDisplay').textContent = data.count;
+            } catch (error) {
+                console.error('Error incrementing click count:', error);
+            }
+        });
+    </script>
+</body>
+</html>
