@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>热搜排行榜</title>
+  <style>
+    /* 全局样式 */
+    body {
+    
+      font-family: 'CustomFont', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f2f5;
+      text-align: center;
+    }
+    
+    @font-face {
+   font-family: 'CustomFont'; /* 自定义字体名称 */
+   src: url('荆南波波黑.otf') format('woff2'); /* 字体文件路径和格式 */
+   font-weight: normal; /* 字体粗细，可选 */
+   font-style: normal; /* 字体样式，可选 */
+    }
+    /* 顶部导航栏样式 */
+    .top-nav {
+      background-color: #f8f9fa; /* 背景颜色 */
+      padding: 10px 20px; /* 内边距 */
+      display: flex;
+      justify-content: space-between; /* 内容分布方式 */
+      align-items: center; /* 垂直居中 */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 添加阴影 */
+      position: fixed; /* 固定在顶部 */
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000; /* 确保在最上层 */
+    }
+
+    .nav-container {
+      display: flex;
+      align-items: center; /* 垂直居中 */
+      gap: 20px; /* 子元素之间的间距 */
+    }
+
+    .nav-item {
+      text-decoration: none; /* 去掉下划线 */
+      color: #333; /* 字体颜色 */
+      font-size: 14px; /* 字体大小 */
+      transition: color 0.3s ease; /* 添加悬停动画 */
+    }
+
+    .nav-item:hover {
+      color: #007bff; /* 悬停时字体颜色 */
+    }
+
+    /* 容器样式 */
+    .container {
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 80px; /* 避免与顶部导航栏重叠 */
+    }
+
+    /* 目录容器样式 */
+    .sidebar {
+      width: 200px;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+      position: fixed;
+      left: 40px;
+      top: 120px; /* 调整以避免与导航栏重叠 */
+      height: calc(100vh - 160px);
+      overflow-y: auto;
+    }
+
+    /* 目录项样式 */
+    .sidebar-item {
+      font-size: 16px;
+      line-height: 1.5;
+      color: #333333;
+      text-decoration: none;
+      cursor: pointer;
+      margin: 10px 0;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+
+    .sidebar-item:hover {
+      background-color: #e4f5ff;
+    }
+
+    /* 热搜项样式 */
+    .hotsearch-item {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      width: 800px;
+      max-width: 800px;
+      min-height: 80px;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+      cursor: pointer;
+      border-radius: 8px;
+      margin: 10px 0;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      background-color: #ffffff;
+    }
+
+    .hotsearch-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+      background-color: #f5f5f5;
+    }
+
+    /* 热搜序号和标题 */
+    .hotsearch-number {
+      color: #1890ff;
+      font-weight: bold;
+      font-size: 18px;
+      padding: 10px;
+      background-color: #e4f5ff;
+      border-radius: 8px;
+      min-width: 40px;
+      text-align: center;
+      margin-right: 20px;
+      transition: background-color 0.3s ease;
+    }
+
+    .hotsearch-number:hover {
+      background-color: #d0ebff;
+    }
+
+    .hotsearch-text {
+      font-size: 16px;
+      line-height: 1.5;
+      color: #333333;
+      text-decoration: none;
+      cursor: default;
+      word-wrap: break-word;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      flex: 1;
+    }
+
+    /* 标题样式 */
+    .hotsearch-title h2 {
+      color: #ff4d4f;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    /* 更新时间样式 */
+    .hotsearch-subtitle {
+      color: #666666;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    /* 错误提示样式 */
+    .error-message {
+      color: #ff4d4f;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 30px;
+      font-size: 18px;
+    }
+
+    /* 隐藏滚动条 */
+    .hotsearch-container {
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+
+    /* 滚动条美化 */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    /* 滚动条滑块 */
+    ::-webkit-scrollbar-thumb {
+      background-color: #1890ff;
+      border-radius: 8px;
+    }
+
+    /* 滚动条轨道 */
+    ::-webkit-scrollbar-track {
+      background-color: #f0f2f5;
+      border-radius: 8px;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- 顶部导航栏 -->
+  <header>
+    <nav class="top-nav">
+        <div class="nav-container">
+            <a href="#" class="nav-item">Sumo Web</a>
+            <a href="/../../index.html" class="nav-item">Home</a>
+        </div>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="sidebar">
+      <h3>目录</h3>
+      <div class="sidebar-container">
+        <div class="sidebar-item" data-type="zhihu">1. 知乎热榜</div>
+        <div class="sidebar-item" data-type="weibo">2. 微博热搜</div>
+        <div class="sidebar-item" data-type="baidu">3. 百度热榜</div>
+        <div class="sidebar-item" data-type="history">4. history</div>
+        <div class="sidebar-item" data-type="bilihot">5. bilibili热榜</div>
+        <div class="sidebar-item" data-type="biliall">6. bilibili全站日</div>
+        <div class="sidebar-item" data-type="sspai">7. 少数派头条</div>
+        <div class="sidebar-item" data-type="douyin">8. 抖音热榜</div>
+      </div>
+    </div>
+    <div class="hotsearch-title">
+      <h2 id="hotsearch-title">知乎热榜</h2>
+      <p class="hotsearch-subtitle" id="hotsearch-subtitle">更新时间：2025-02-09 05:56:06</p>
+    </div>
+    <div class="hotsearch-container" id="hotsearch-container">
+      <!-- 热搜数据将动态填充到这里 -->
+    </div>
+  </div>
+
+  <script>
+    // API 地址模板
+    const apiUrlTemplate = 'https://api.cenguigui.cn/api/juhe/hotlist.php?type='; 
+    
+    // 获取热搜数据并渲染到页面
+    async function fetchAndRenderHotsearch(type) {
+      try {
+        const response = await fetch(`${apiUrlTemplate}${type}`);
+        const data = await response.json();
+        
+        if (data.success) {
+          const container = document.getElementById('hotsearch-container');
+          const titleElement = document.getElementById('hotsearch-title');
+          const subtitleElement = document.getElementById('hotsearch-subtitle');
+          
+          container.innerHTML = ''; // 清空容器内容
+
+          // 更新标题和更新时间
+          titleElement.textContent = data.title || '热榜';
+          subtitleElement.textContent = `更新时间：${data.update_time || '未知'}`;
+
+          // 只显示前十条热搜数据
+          const top10Data = data.data.slice(0, 10);
+          top10Data.forEach((item, index) => {
+            const hotsearchItem = document.createElement('div');
+            hotsearchItem.className = 'hotsearch-item';
+
+            // 序号
+            const indexDiv = document.createElement('div');
+            indexDiv.className = 'hotsearch-number';
+            indexDiv.textContent = `${index + 1}.`;
+
+            // 标题
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'hotsearch-text';
+            titleDiv.textContent = item.title;
+
+            hotsearchItem.appendChild(indexDiv);
+            hotsearchItem.appendChild(titleDiv);
+            
+            container.appendChild(hotsearchItem);
+          });
+        } else {
+          renderErrorMessage('API 返回数据失败，请稍后再试');
+        }
+      } catch (error) {
+        renderErrorMessage('获取数据失败，请稍后再试');
+        console.error('加载数据失败：', error);
+      }
+    }
+
+    // 渲染错误信息
+    function renderErrorMessage(message) {
+      const container = document.getElementById('hotsearch-container');
+      container.innerHTML = `<div class="error-message">${message}</div>`;
+    }
+
+    // 初始化页面内容
+    function init() {
+      // 默认加载知乎热榜
+      fetchAndRenderHotsearch('zhihu');
+
+      // 目录点击事件
+      const sidebarItems = document.querySelectorAll('.sidebar-item');
+      sidebarItems.forEach((item) => {
+        item.addEventListener('click', (e) => {
+          const type = e.target.getAttribute('data-type');
+          fetchAndRenderHotsearch(type);
+        });
+      });
+    }
+
+    // 页面加载完成后自动加载热搜数据
+    window.onload = init;
+  </script>
+</body>
+</html>
