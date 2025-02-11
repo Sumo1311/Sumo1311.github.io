@@ -41,6 +41,18 @@
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
+            animation: popup 0.5s ease-in-out; /* 添加弹出动画 */
+        }
+
+        @keyframes popup {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         /* 新按钮样式 */
@@ -198,9 +210,14 @@
         document.getElementById('randomButton').addEventListener('click', function () {
             const randomNum = Math.floor(Math.random() * 21) + 1;
             const photoElement = document.getElementById('photo');
-            photoElement.src = `${randomNum}.jpg`;
+            photoElement.src = `${randomNum}.webp`;
             photoElement.style.display = 'block';
+            // 重新触发动画
+            photoElement.style.animation = 'none';
+            photoElement.offsetHeight; /* 触发 reflow */
+            photoElement.style.animation = 'popup 0.5s ease-in-out';
         });
     </script>
 </body>
 </html>
+
