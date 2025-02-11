@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sumo Web</title>
+    <style>
+        /* 原有导航栏样式 */
+        .top-nav {
+            background-color: #FFC0CB; /* 导航栏背景颜色设置为粉红色 */
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item:hover {
+            color: #007bff;
+        }
+
+        /* 目录样式 */
+        .directory {
+            position: fixed;
+            left: 20px; /* 左边留出20px的距离 */
+            top: 60px; /* 位于导航栏下方 */
+            bottom: 20px; /* 下方留出20px的空间 */
+            width: 160px; /* 目录部分宽度 */
+            background-color: #FFC0CB; /* 目录部分背景颜色设置为粉红色 */
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2); /* 添加阴影效果 */
+            padding: 15px 10px; /* 增加内边距 */
+            z-index: 999;
+            overflow: hidden; /* 取消滚动条 */
+            border-radius: 10px; /* 设置圆角效果 */
+        }
+
+        .directory iframe {
+            width: 100%;
+            height: calc(100vh - 150px); /* 高度为视口高度减去导航栏和内边距，同时预留下方空间 */
+            border: none;
+        }
+
+        /* 中心内容区域样式 */
+        .center {
+            margin-left: 200px; /* 为目录留出空间，与目录部分宽度一致 */
+            padding: 20px;
+            min-height: calc(100vh - 60px); /* 最小高度为视口高度减去导航栏高度 */
+            overflow: hidden; /* 取消滚动条 */
+        }
+
+        .center iframe {
+            width: 100%;
+            height: calc(100vh - 150px); /* 高度为视口高度减去导航栏和内边距，同时预留下方空间 */
+            border: none;
+        }
+
+        /* 设置整体背景颜色为粉红色 */
+        body {
+            background-color: #FFC0CB; /* 粉红色 */
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden; /* 取消滚动条 */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="top-nav">
+            <div class="nav-container">
+                <a href="#" class="nav-item">Sumo Web</a>
+                <a href="/../../index.html" class="nav-item">Home</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 目录部分 -->
+    <aside class="directory">
+        <iframe src="menu.html" frameborder="0"></iframe>
+    </aside>
+
+    <!-- 中心内容区域 -->
+    <main class="center">
+        <iframe src="center.html" frameborder="0"></iframe>
+    </main>
+</body>
+</html>
