@@ -7,12 +7,12 @@
     <style>
         /* 原有导航栏样式 */
         .top-nav {
-            background-color: #FFC0CB; /* 导航栏背景颜色设置为粉红色 */
+            background-color: #FFC0CB;
             padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -35,48 +35,90 @@
             color: #007bff;
         }
 
-        /* 目录样式 */
+        /* 新版目录样式 */
         .directory {
             position: fixed;
-            left: 20px; /* 左边留出20px的距离 */
-            top: 60px; /* 位于导航栏下方 */
-            bottom: 20px; /* 下方留出20px的空间 */
-            width: 160px; /* 目录部分宽度 */
-            background-color: #FFC0CB; /* 目录部分背景颜色设置为粉红色 */
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2); /* 添加阴影效果 */
-            padding: 15px 10px; /* 增加内边距 */
+            left: 20px;
+            top: 60px;
+            bottom: 20px;
+            width: 160px;
+            background-color: #FFC0CB;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            padding: 15px 10px;
             z-index: 999;
-            overflow: hidden; /* 取消滚动条 */
-            border-radius: 10px; /* 设置圆角效果 */
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        .directory-top {
+            width: 100%;
+            aspect-ratio: 9/16; /* 保持9:16的长宽比 */
+            flex-shrink: 0;
+            margin-bottom: 15px;
+        }
+
+        .directory-bottom {
+            flex: 1;
+            min-height: 0; /* 允许内容收缩 */
         }
 
         .directory iframe {
             width: 100%;
-            height: calc(100vh - 150px); /* 高度为视口高度减去导航栏和内边距，同时预留下方空间 */
+            height: 100%;
+            border: none;
+        }
+
+        /* 核心部分样式 */
+        .core {
+            position: fixed;
+            right: 20px;
+            top: 60px;
+            bottom: 20px;
+            width: 300px;
+            background-color: #FFC0CB;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            padding: 15px 10px;
+            z-index: 998;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .core iframe {
+            width: 100%;
+            height: calc(100vh - 150px);
             border: none;
         }
 
         /* 中心内容区域样式 */
         .center {
-            margin-left: 200px; /* 为目录留出空间，与目录部分宽度一致 */
-            padding: 20px;
-            min-height: calc(100vh - 60px); /* 最小高度为视口高度减去导航栏高度 */
-            overflow: hidden; /* 取消滚动条 */
+            position: fixed;
+            left: 220px;
+            right: 360px;
+            top: 60px;
+            bottom: 20px;
+            background-color: #FFC0CB;
+            border-radius: 10px;
+            padding: 15px 30px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 997;
+            overflow: hidden;
         }
 
         .center iframe {
             width: 100%;
-            height: calc(100vh - 150px); /* 高度为视口高度减去导航栏和内边距，同时预留下方空间 */
+            height: calc(100vh - 150px);
             border: none;
         }
 
-        /* 设置整体背景颜色为粉红色 */
+        /* 全局样式 */
         body {
-            background-color: #FFC0CB; /* 粉红色 */
+            background-color: #FFC0CB;
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            overflow: hidden; /* 取消滚动条 */
+            overflow: hidden;
         }
     </style>
 </head>
@@ -90,14 +132,24 @@
         </nav>
     </header>
 
-    <!-- 目录部分 -->
+    <!-- 新版目录结构 -->
     <aside class="directory">
-        <iframe src="menu.html" frameborder="0"></iframe>
+        <div class="directory-top">
+            <iframe src="menu-top.html"></iframe>
+        </div>
+        <div class="directory-bottom">
+            <iframe src="menu-bottom.html"></iframe>
+        </div>
+    </aside>
+
+    <!-- 核心部分 -->
+    <aside class="core">
+        <iframe src="core.html" frameborder="0"></iframe>
     </aside>
 
     <!-- 中心内容区域 -->
-    <main class="center">
+    <aside class="center">
         <iframe src="center.html" frameborder="0"></iframe>
-    </main>
+    </aside>
 </body>
 </html>

@@ -274,6 +274,11 @@
             hotsearchItem.appendChild(indexDiv);
             hotsearchItem.appendChild(titleDiv);
             
+            hotsearchItem.addEventListener('click', () => {
+          const encodedTitle = encodeURIComponent(item.title); // 对标题进行 URL 编码
+          const baiduSearchUrl = `https://www.baidu.com/s?wd=${encodedTitle}`; // 构造百度搜索链接
+          window.open(baiduSearchUrl, '_blank'); // 在新标签页中打开百度搜索结果
+        });
             container.appendChild(hotsearchItem);
           });
         } else {

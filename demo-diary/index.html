@@ -3,28 +3,316 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>月份日历</title>
-    <link rel="stylesheet" href="styles.css">
-    <!-- 添加在<head>标签内 -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>智能日历日记</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            overflow: hidden;
+            background: #f0f2f5;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            transition: transform 0.3s ease;
+        }
+
+        /* 左侧容器 */
+        .left-container {
+            width: calc(100vw /6);
+            height: 100%;
+            background: #2c3e50;
+            padding: 10px;
+            overflow-x: hidden;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        /* 月份容器 */
+        .months-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            height: 100%;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* 日历容器 */
+        .calendar-wrapper {
+            
+            position: absolute;
+            top: 0;
+            left: 100%;
+            width: 100%;
+            height: 100%;
+            padding: 10px;
+            background: #34495e;
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .show-calendar .months-wrapper {
+            transform: translateX(-100%);
+        }
+        .show-calendar .calendar-wrapper {
+            transform: translateX(-100%);
+        }
+
+        /* 通用按钮样式 */
+        .btn {
+            border: none;
+            background: #3498db;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: clamp(12px, 1.5vw, 16px);
+            touch-action: manipulation;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+            transform: scale(1.02);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        /* 日历网格 */
+        .calendar-grid {
+            display: grid;
+            right:100%;
+            grid-template-columns: repeat(3, 4fr);
+            gap: 4px;
+            height: calc(100% - 60px);
+            padding: 10px;
+        }
+
+        .day-btn {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ecf0f1;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        /* 返回按钮 */
+        /* 修改返回按钮样式 */
+.back-btn {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    width: calc(100% - 20px);
+    z-index: 100;
+    background: #e74c3c;
+    display: none; /* 初始隐藏 */
+}
+
+.show-calendar .back-btn {
+    display: block; /* 显示日历时显示返回按钮 */
+}
+
+/* 调整日历容器高度 */
+.calendar-wrapper {
+    height: calc(100% - 60px); /* 为返回按钮留出空间 */
+    overflow-y: auto; /* 添加滚动条 */
+}
+        /* 右侧日记区域 */
+        .right-container {
+            flex: 1;
+            padding: 20px;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .diary-card {
+            position: absolute;
+            top: -100%;
+            left: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: top 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .diary-card.show {
+            top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .left-container {
+                width: 100%;
+                height: auto;
+                flex-shrink: 0;
+            }
+
+            .months-wrapper {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .btn {
+                flex: 1 1 25%;
+                min-width: 60px;
+                text-decoration: none;
+            }
+
+            .calendar-grid {
+                height: auto;
+                min-height: 300px;
+            }
+
+            .right-container {
+                height: 100%;
+            }
+        }
+    </style>
 </head>
-<header>
-    <nav class="top-nav">
-        <div class="nav-container">
-            <a href="#" class="nav-item">Sumo Web</a>
-            <a href="/../../index.html" class="nav-item">Home</a>
-        </div>
-    </nav>
-</header>
 <body>
     <div class="container">
-        <div class="month-buttons" id="monthButtons"></div>
-        <div class="calendar-container">
-            <div class="calendar-days" id="calendarDays"></div>
-            <div class="calendar-journal" id="calendarJournal"></div>
+        <!-- 在left-container内添加固定的返回按钮 -->
+<div class="left-container">
+    <div class="months-wrapper"></div>
+    <div class="calendar-wrapper"></div>
+    <!-- 将返回按钮移到外层容器 -->
+    <button class="btn back-btn">← 返回</button>
+</div>
+        <div class="right-container">
+            <div class="diary-card">
+                <h2 class="diary-date"></h2>
+                <p class="diary-content"></p>
+            </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // 初始化月份按钮
+        const monthsWrapper = document.querySelector('.months-wrapper');
+        for (let i = 0; i < 12; i++) {
+            const monthBtn = document.createElement('button');
+            monthBtn.className = 'btn';
+            monthBtn.textContent = `${i + 1}月`;
+            monthBtn.dataset.month = i + 1;
+            monthsWrapper.appendChild(monthBtn);
+        }
+        const returnLink = document.createElement('a');
+returnLink.href = "/../../index.html"; // 设置链接地址
+returnLink.className = 'btn';
+returnLink.textContent = '返回';
+monthsWrapper.appendChild(returnLink);
+        // 处理月份点击
+        monthsWrapper.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                const month = e.target.dataset.month;
+                showCalendar(month);
+            }
+        });
+
+        // 显示日历
+        function showCalendar(month) {
+    const container = document.querySelector('.left-container');
+    const calendarWrapper = document.querySelector('.calendar-wrapper');
+            
+            // 生成日历
+calendarWrapper.innerHTML = '';
+const calendarGrid = document.createElement('div');
+calendarGrid.className = 'calendar-grid';
+
+// 生成日期（示例逻辑）
+const daysInMonth = new Date(2023, month, 0).getDate();
+for (let i = 1; i <= daysInMonth; i++) {
+    const dayBtn = document.createElement('button');
+    dayBtn.className = 'btn day-btn';
+    dayBtn.textContent = i;
+    dayBtn.dataset.date = `${month}-${i}`;
+    calendarGrid.appendChild(dayBtn);
+}
+
+// 添加返回按钮
+const backBtn = document.createElement('button');
+backBtn.className = 'btn back-btn';
+backBtn.style.display = 'none';
+backBtn.textContent = '← 返回';
+backBtn.onclick = () => {
+    container.classList.remove('show-calendar');
+};
+ document.querySelector('.back-btn').onclick = () => {
+        container.classList.remove('show-calendar');
+    };
+
+calendarWrapper.appendChild(calendarGrid);
+calendarWrapper.appendChild(backBtn);
+container.classList.add('show-calendar');
+
+// 绑定日期点击事件
+calendarGrid.addEventListener('click', (e) => {
+    if (e.target.classList.contains('day-btn')) {
+        showDiary(e.target.dataset.date);
+    }
+    
+});
+        }
+
+        // 显示日记
+        function showDiary(date) {
+            const diaryCard = document.querySelector('.diary-card');
+            const diaryDate = diaryCard.querySelector('.diary-date');
+            const diaryContent = diaryCard.querySelector('.diary-content');
+            
+            // 示例日记数据
+            const diaries = {
+                '2-10': '日记进入最后的尾声环节，通过修改代码记录，后面就可以实现每天的记录工作；另外情侣空间也需要开始搭建了',
+                // 添加更多日记数据
+            };
+
+            diaryDate.textContent = `2023年${date.split('-')[0]}月${date.split('-')[1]}日`;
+            diaryContent.textContent = diaries[date] || '今天还没有写日记哦~';
+            
+            diaryCard.classList.add('show');
+            setTimeout(() => {
+                diaryCard.style.transition = 'none';
+            }, 300);
+        }
+
+        // 关闭日记（示例）
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.diary-card') && !e.target.classList.contains('day-btn')) {
+                document.querySelector('.diary-card').classList.remove('show');
+            }
+        });
+
+        // 移动端优化
+        let touchStartX = 0;
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.touches[0].clientX;
+        });
+
+        document.addEventListener('touchend', e => {
+            const touchEndX = e.changedTouches[0].clientX;
+            if (touchStartX - touchEndX > 50) {
+                document.querySelector('.left-container').classList.remove('show-calendar');
+            }
+        });
+    </script>
 </body>
 </html>
