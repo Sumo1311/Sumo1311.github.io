@@ -21,17 +21,21 @@
             margin: 0;
             background-color: #FFC0CB;
             overflow: hidden;
+            padding: 20px; /* 添加一些内边距 */
+        }
+        .button-container {
+            margin-bottom: 20px; /* 调整按钮与照片之间的间距 */
         }
         .photo-container {
             border: 2px solid #ccc;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            max-width: 80%;
-            max-height: 60%;
-            margin-top: 20px;
+            max-width: 90%;
+            max-height: 80%;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            margin: auto; /* 将照片容器居中 */
         }
         img {
             max-width: 100%;
@@ -53,7 +57,7 @@
             box-shadow: 0 0 0 #fec1958c;
             transition: all 0.3s ease-in-out;
             cursor: pointer;
-            margin-bottom: 20px; /* 保留原有间距 */
+            margin-bottom: 10px; /* 保留原有间距 */
         }
 
         button:hover {
@@ -176,21 +180,23 @@
     </style>
 </head>
 <body>
-    <button id="randomButton">
-        显示随机照片
-        <div class="star-1">
-            <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd" viewBox="0 0 784.11 815.53" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <path class="fil0" d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"></path>
-            </svg>
-        </div>
-    </button>
+    <div class="button-container">
+        <button id="randomButton">
+            显示随机照片
+            <div class="star-1">
+                <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd" viewBox="0 0 784.11 815.53" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <path class="fil0" d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"></path>
+                </svg>
+            </div>
+        </button>
+    </div>
     <div class="photo-container">
         <img id="photo" src="" alt="随机照片" style="display:none;">
     </div>
 
     <script>
         document.getElementById('randomButton').addEventListener('click', function () {
-            const randomNum = Math.floor(Math.random() * 10) + 1;
+            const randomNum = Math.floor(Math.random() * 21) + 1;
             const photoElement = document.getElementById('photo');
             photoElement.src = `${randomNum}.jpg`;
             photoElement.style.display = 'block';

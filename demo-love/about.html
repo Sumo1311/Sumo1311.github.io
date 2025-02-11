@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时间计算</title>
+    <style>
+    @font-face {
+      font-family: 'MyFont';
+      src: url('荆南波波黑.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+    }
+        body {
+            text-align: center;
+            padding-top: 10px;
+            font-family: MyFont, sans-serif;
+            font-size: 22px;
+        }
+    </style>
+</head>
+<body>
+    <p>smz和wyt已经在一起</br></br><span id="timeElapsed">0</span></p>
+
+    <script>
+        // 目标时间：2024年4月11日晚上24:00（即2024年4月12日00:00:00）
+        const targetTime = new Date("2024-04-12T00:00:00").getTime();
+
+        // 实时更新时间差
+        function updateTime() {
+            const currentTime = Date.now();
+            const timeDifference = currentTime - targetTime;
+            const secondsElapsed = Math.floor(timeDifference / 1000); // 换算成秒
+
+            // 计算天数、小时、分钟、秒
+            const days = Math.floor(secondsElapsed / 86400);
+            const hours = Math.floor((secondsElapsed % 86400) / 3600);
+            const minutes = Math.floor((secondsElapsed % 3600) / 60);
+            const seconds = secondsElapsed % 60;
+
+            // 格式化输出
+            const formattedTime = [
+                days > 0 ? `${days}天` : '',
+                hours > 0 ? `${hours}小时` : '',
+                minutes > 0 ? `${minutes}分钟` : '',
+                `${seconds}秒`
+            ].filter(Boolean).join(' ');
+
+            document.getElementById("timeElapsed").textContent = formattedTime;
+        }
+
+        // 每秒更新一次
+        setInterval(updateTime, 1000);
+
+        // 页面加载时立即更新一次
+        updateTime();
+    </script>
+</body>
+</html>
